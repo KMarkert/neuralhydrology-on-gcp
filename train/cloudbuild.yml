@@ -1,0 +1,4 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'REGION-docker.pkg.dev/PROJECT/neuralhydro-trainer/training-image', '.' ]
+images: ['REGION-docker.pkg.dev/PROJECT/neuralhydro-trainer/training-image']

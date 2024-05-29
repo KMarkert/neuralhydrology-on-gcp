@@ -1,0 +1,4 @@
+cloudpathlib[gs]
+fsspec
+gcsfs
+git+https://github.com/KMarkert/neuralhydrology.git@read-from-cloud 
