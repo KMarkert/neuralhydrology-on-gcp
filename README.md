@@ -93,7 +93,7 @@ gcloud functions deploy nh-inference \
   --entry-point=nh_predict \
   --region=$REGION \ 
   --runtime=python311 \
-  --env-vars-file=.env.yml \
+  --env-vars-file=env.yml \
   --memory=1GB \
   --cpu=1 \
   --allow-unauthenticated \
