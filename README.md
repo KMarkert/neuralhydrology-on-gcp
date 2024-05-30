@@ -16,6 +16,12 @@ This next section walks through the technical steps for how to train, deploy, an
 
 Make sure all of the necessary APIs are enabled:
 
+```
+gcloud services enable \
+  earthengine.googleapis.com \
+  aiplatform.googleapis.com \
+  run.googleapis.com 
+```
 
 Define environment variables that will be used throught:
 
