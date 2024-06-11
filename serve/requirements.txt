@@ -1,0 +1,6 @@
+cloudpathlib[gs]
+git+https://github.com/KMarkert/neuralhydrology.git@read-from-cloud 
+numpy
+pandas
+torch
+xarray

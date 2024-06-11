@@ -1,0 +1,58 @@
+xarray_feature_scale:
+  coords: {}
+  attrs: {}
+  dims: {}
+  data_vars:
+    QObs(mm/d):
+      dims: []
+      attrs: {}
+      data: 2.975726366043091
+    prcp(mm/day):
+      dims: []
+      attrs: {}
+      data: 7.56003475189209
+    srad(W/m2):
+      dims: []
+      attrs: {}
+      data: 133.10829162597656
+    tmax(C):
+      dims: []
+      attrs: {}
+      data: 11.192333221435547
+    tmin(C):
+      dims: []
+      attrs: {}
+      data: 10.473581314086914
+    vp(Pa):
+      dims: []
+      attrs: {}
+      data: 681.5603637695312
+xarray_feature_center:
+  coords: {}
+  attrs: {}
+  dims: {}
+  data_vars:
+    QObs(mm/d):
+      dims: []
+      attrs: {}
+      data: 1.1212924718856812
+    prcp(mm/day):
+      dims: []
+      attrs: {}
+      data: 3.062514066696167
+    srad(W/m2):
+      dims: []
+      attrs: {}
+      data: 349.70477294921875
+    tmax(C):
+      dims: []
+      attrs: {}
+      data: 16.932462692260742
+    tmin(C):
+      dims: []
+      attrs: {}
+      data: 4.298570156097412
+    vp(Pa):
+      dims: []
+      attrs: {}
+      data: 952.6474609375

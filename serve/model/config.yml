@@ -1,0 +1,58 @@
+batch_size: 256
+clip_gradient_norm: 1
+clip_targets_to_zero:
+- QObs(mm/d)
+commit_hash:
+data_dir: gs://neuralhydro/CAMEL_US
+dataset: camels_us
+device: cuda:0
+dynamic_inputs:
+- prcp(mm/day)
+- srad(W/m2)
+- tmax(C)
+- tmin(C)
+- vp(Pa)
+epochs: 50
+experiment_name: test_run
+forcings:
+- daymet
+head: regression
+hidden_size: 20
+img_log_dir: /neuralhydro/runs/test_run_2905_023445/img_log
+initial_forget_bias: 3
+learning_rate:
+  0: 0.01
+  30: 0.005
+  40: 0.001
+log_interval: 5
+log_n_figures: 1
+log_tensorboard: true
+loss: MSE
+metrics:
+- NSE
+model: cudalstm
+num_workers: 8
+number_of_basins: 19
+optimizer: Adam
+output_activation: linear
+output_dropout: 0.4
+package_version: 1.10.0
+predict_last_n: 1
+run_dir: /neuralhydro/runs/test_run_2905_023445
+save_weights_every: 1
+seed: 4494
+seq_length: 365
+target_variables:
+- QObs(mm/d)
+test_basin_file: basin.txt
+test_end_date: 30/09/1999
+test_start_date: 01/10/1989
+train_basin_file: basin.txt
+train_dir: /neuralhydro/runs/test_run_2905_023445/train_data
+train_end_date: 30/09/2008
+train_start_date: 01/10/1999
+validate_every: 3
+validate_n_random_basins: 1
+validation_basin_file: basin.txt
+validation_end_date: 30/09/1989
+validation_start_date: 01/10/1980
