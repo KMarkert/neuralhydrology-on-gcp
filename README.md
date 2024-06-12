@@ -40,7 +40,7 @@ gsutil mb -l $REGION gs://$BUCKET_NAME
 Create an Artifact Repository to save built Docker images to:
 
 ```
-gcloud artifacts repositories create neuralhydro-trainer \
+gcloud artifacts repositories create neuralhydrology \
  --location=$REGION \
  --repository-format=docker \
  --description="Custom image for training a hydrology LSTM"
@@ -72,7 +72,7 @@ After the Docker image is built, a custom training job can be submitted using th
 gcloud ai custom-jobs create \
   --display-name=neuralhydrology-run \
   --region=$REGION \
-  --worker-pool-spec=machine-type=n1-standard-8,replica-count=1,container-image-uri=$REGION-docker.pkg.dev/$PROJECT/neuralhydro-trainer/training-image
+  --worker-pool-spec=machine-type=n1-standard-8,replica-count=1,container-image-uri=$REGION-docker.pkg.dev/$PROJECT/neuralhydrology/training-image
 ```
 
 Depending on how many basins being trained on and the compute resources this can take a few minutes to hours. 
@@ -108,6 +108,74 @@ gcloud functions deploy nh-inference \
 ```
 
 The command will build a package container and deploy the service to Cloud Functions with an endpoint that you can use.
+
+### Deploy model to Vertex AI
+
+A common way to to deploy a service in Google Cloud is to use Cloud Function or one could just load the model in a notebook too. Here VertexAI is used because it allows you to run Online Predictions for quick synchronous requests and Batch Predictions for running predictions over large datasets with no change to deployment.
+
+VertexAI has many methods for hosting models. Since NeuralHydrology is a custom framework, a Custom Container will be used for the model. Then once a model is hosted the model will need to be deployed to an endpoint. The next section will walk through this process.
+
+Change directories into the subdirectory with the serving code:
+
+```
+cd serve
+```
+Update `serve/cloudbuild.yml` and replace "REGION" with the cloud region you are using and replace "PROJECT" with your cloud project name.
+
+Move the trained model components to the `model/` subdirectory:
+
+```
+gsutil -m cp -r \ gs://$BUCKET_NAME/runs/test_run_*/model_epoch050.pt \
+gs://$BUCKET_NAME/runs/test_run_*/config.yml \
+gs://$BUCKET_NAME/runs/test_run_*/train_data/ \
+model/
+```
+
+Build the Docker image for serving the model with the following command:
+
+```
+gcloud builds submit --config cloudbuild.yml
+```
+
+Upload the model to VertexAI Model Registry
+
+```
+gcloud ai models upload \
+--display-name=neuralhydrology-model \
+--container-image-uri=$REGION-docker.pkg.dev/$PROJECT/neuralhydrology/serving-image \
+--container-health-route="/ping" \
+--container-predict-route="/predict" \
+--container-ports=7080 \
+--region=$REGION \
+--model-id=neuralhydrology-model
+```
+
+Create an endpoint from which to serve the model:
+
+```
+gcloud ai endpoints create \
+--display-name=neurohydrology-endpoint \
+--region=$REGION
+```
+
+Get the endpoint ID from VertexAI that was just created to deploy the model:
+
+```
+ENDPOINT_ID=$(gcloud ai endpoints list \
+  --region=$REGION \
+  --filter=displayName:neurohydrology-endpoint \
+  --format="value(ENDPOINT_ID.scope())")
+```
+
+Deploy the model to the endpoint:
+
+```
+gcloud ai endpoints deploy-model $ENDPOINT_ID \
+  --region=$REGION \
+  --model=neuralhydrology-model \
+  --display-name=neuralhydrology-deployed \
+  --machine-type=n1-standard-4
+```
 
 ### Explore results
 
