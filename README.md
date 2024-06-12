@@ -80,35 +80,6 @@ Depending on how many basins being trained on and the compute resources this can
 After the training job has completed successfully, you should see data in bucket you specified in the `task.py` file. There should be a new `run/` directory with the model run directory that just completed.
 
 
-### Deploy model for inference
-
-Update the variables in the `inference-cf/.env.yml` file with your information. The `BUCKET` variable should be the cloud storage bucket with your model results. The `RUN_DIR` variable should be the model run directory with the save model weights.
-
-This example uses Google Cloud Functions for the deployment to an endpoint for predictions. There are many other great options for model deployment but this is fairly straightforward and scalable which is why it is used here.
-
-Change directories into the subdirectory with the Cloud Function code:
-
-```
-cd inference-cf
-```
-
-To deploy the functions with the following command:
-
-```
-gcloud functions deploy nh-inference \
-  --entry-point=nh_predict \
-  --region=$REGION \ 
-  --runtime=python311 \
-  --env-vars-file=env.yml \
-  --memory=1GB \
-  --cpu=1 \
-  --allow-unauthenticated \
-  --gen2 \
-  --trigger-http 
-```
-
-The command will build a package container and deploy the service to Cloud Functions with an endpoint that you can use.
-
 ### Deploy model to Vertex AI
 
 A common way to to deploy a service in Google Cloud is to use Cloud Function or one could just load the model in a notebook too. Here VertexAI is used because it allows you to run Online Predictions for quick synchronous requests and Batch Predictions for running predictions over large datasets with no change to deployment.
